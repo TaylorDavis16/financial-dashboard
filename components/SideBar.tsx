@@ -5,20 +5,26 @@ import Image from "next/image";
 import { sidebarLinks } from "..";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
+import Footer from "./Footer";
 const SideBar = ({ user }: SiderbarProps) => {
   const pathname = usePathname();
   return (
     <section className="sidebar">
       <nav className="flex flex-col gap-4">
-        <Link href="/" className="flex mb-12 cursor-pointer items-center gap-2">
-          <Image
-            src="/icons/logo.svg"
-            width={34}
-            height={34}
-            alt="Horizon logo"
-            className="size-[24px] max-xl:size-14"
-          />
-          <h1 className="sidebar-logo">Horizon</h1>
+        <Link href="/" className="flex flex-col ">
+          <div className="flex mb-2 cursor-pointer items-center gap-2">
+            <Image
+              src="/icons/logo.svg"
+              width={34}
+              height={34}
+              alt="Horizon logo"
+              className="size-[24px] max-xl:size-14"
+            />
+            <h1 className="sidebar-logo">Horizon</h1>
+          </div>
+          <span className="font-semibold text-black-2">
+            Your financial partner
+          </span>
         </Link>
         {sidebarLinks.map((link) => {
           const isActive =
@@ -44,7 +50,7 @@ const SideBar = ({ user }: SiderbarProps) => {
           );
         })}
       </nav>
-      FOOTER
+      <Footer user={user} />
     </section>
   );
 };

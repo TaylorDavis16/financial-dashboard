@@ -2,7 +2,7 @@
 import { type ClassValue, clsx } from "clsx";
 import qs from "query-string";
 import { twMerge } from "tailwind-merge";
-
+import { z } from "zod";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -193,3 +193,16 @@ export const getTransactionStatus = (date: Date) => {
 
   return date > twoDaysAgo ? "Processing" : "Success";
 };
+
+export const authFormSchema = (type: string) => z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  firstName: type === 'sign-in' ? z.string().optional() : z.string().min(3, "Please enter your first name"),
+  lastName: type === 'sign-in' ? z.string().optional() : z.string().min(3, "Please enter your last name"),
+  address1: type === 'sign-in' ? z.string().optional() : z.string().min(5, "Please enter your address").max(50),
+  city: type === 'sign-in' ? z.string().optional() : z.string().min(2, "Please enter your city").max(10),
+  state: type === 'sign-in' ? z.string().optional() : z.string().min(2, "Please enter a valid state").max(2, "Please enter a valid state"),
+  postalCode: type === 'sign-in' ? z.string().optional() : z.string().min(5, "Please enter valid postal code").max(5, "Please enter valid postal code"),
+  dateOfBirth: type === 'sign-in' ? z.string().optional() : z.string().min(10, "Please enter your date of birth"),
+  ssn: type === 'sign-in' ? z.string().optional() : z.string().min(4, "Please enter your SSN").max(4, "Please enter your SSN"),
+});
