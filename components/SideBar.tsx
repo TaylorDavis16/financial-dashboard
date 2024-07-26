@@ -2,10 +2,11 @@
 import Link from "next/link";
 import React from "react";
 import Image from "next/image";
-import { sidebarLinks } from "..";
+import { sidebarLinks } from "@/constants";
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Footer from "./Footer";
+import PlaidLink from "./PlaidLink";
 const SideBar = ({ user }: SiderbarProps) => {
   const pathname = usePathname();
   return (
@@ -49,6 +50,7 @@ const SideBar = ({ user }: SiderbarProps) => {
             </Link>
           );
         })}
+        <PlaidLink user={user} />
       </nav>
       <Footer user={user} />
     </section>
