@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-financefashboard-dev-a550d-authRole",
+      "UnauthRoleArn": "arn:aws:iam::381492010086:role/amplify-financefashboard-dev-a550d-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::381492010086:role/amplify-financefashboard-dev-a550d-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-financefashboard-dev-a550d-deployment",
+      "UnauthRoleName": "amplify-financefashboard-dev-a550d-unauthRole",
+      "StackName": "amplify-financefashboard-dev-a550d",
+      "StackId": "arn:aws:cloudformation:us-east-1:381492010086:stack/amplify-financefashboard-dev-a550d/a34a15b0-4f89-11ef-92b3-0affd7b6adb1",
+      "AmplifyAppId": "d26akenrl731lp"
+    },
+    "categories": {
+      "auth": {
+        "financefashboard9fa49bb89fa49bb8": {}
+      }
+    }
+  }
+}

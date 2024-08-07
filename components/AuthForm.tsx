@@ -19,12 +19,13 @@ import CustomInput from "./CustomInput";
 import { authFormSchema } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { signIn, signUp } from "@/lib/actions/user.actions";
+import { handleConfirmSignUp, userSignIn, userSignUp } from "@/lib/actions/user.actions";
 import PlaidLink from "./PlaidLink";
 const AuthForm = ({ type }: { type: string }) => {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [signUpStep, setSignUpStep] = useState(1);
   // 1. Define your form.
   const formSchema = authFormSchema(type);
   const form = useForm<z.infer<typeof formSchema>>({
@@ -39,32 +40,47 @@ const AuthForm = ({ type }: { type: string }) => {
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+    console.log("data: ", data);
     setLoading(true);
     try {
       if (type === "sign-up") {
         // Call your sign-up API endpoint here.
-        const userData = {
-          firstName: data.firstName!,
-          lastName: data.lastName!,
-          address1: data.address1!,
-          city: data.city!,
-          state: data.state!,
-          postalCode: data.postalCode!,
-          dateOfBirth: data.dateOfBirth!,
-          ssn: data.ssn!,
-          email: data.email,
-          password: data.password,
-        };
-        const newUser = await signUp(userData);
-        setUser(newUser);
+        if (signUpStep === 1) {
+          const userData = {
+            firstName: data.firstName!,
+            lastName: data.lastName!,
+            address1: data.address1!,
+            city: data.city!,
+            state: data.state!,
+            postalCode: data.postalCode!,
+            dateOfBirth: data.dateOfBirth!,
+            ssn: data.ssn!,
+            email: data.email,
+            password: data.password,
+          };
+          const isSignUpComplete = await userSignUp(
+            userData
+          );
+          if (!isSignUpComplete) {
+            setSignUpStep(2);
+          }
+        } else {
+          const isSignUpComplete = await handleConfirmSignUp({
+            email: data.email,
+            confirmationCode: data.confirmationCode!,
+          });
+          if (isSignUpComplete) {
+            router.push("/sign-in");
+          }
+        }
       } else {
         console.log("data: ", data);
         // Call your sign-in API endpoint here.
-        const response = await signIn({
-          email: data.email,
+        const response = await userSignIn({
+          username: data.email,
           password: data.password,
         });
-        console.log('response: ', response);
+        console.log("response: ", response);
         if (response) {
           router.push("/");
         }
@@ -162,7 +178,7 @@ const AuthForm = ({ type }: { type: string }) => {
                       control={form.control}
                       name="dateOfBirth"
                       label="Date of Birth"
-                      placeholder="Example: 01/01/1990"
+                      placeholder="Example: 1990-01-01"
                     />
                     <CustomInput
                       control={form.control}
@@ -179,7 +195,13 @@ const AuthForm = ({ type }: { type: string }) => {
                 name="password"
                 label="Password"
               />
-
+              {signUpStep === 2 && (
+                <CustomInput
+                  control={form.control}
+                  name="confirmationCode"
+                  label="Confirmation Code"
+                />
+              )}
               <div className="flex flex-col gap-4">
                 <Button type="submit" className="form-btn" disabled={loading}>
                   {loading ? (
